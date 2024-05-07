@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# script/build: Publishs/pushes all versions of the hst-ruby docker image to
+#               Artifactory.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+for VERSION in $(ruby -Ilib -rruby -e 'Ruby.versions')
+do
+  ruby -Ilib lib/dockerfile.rb $VERSION | docker buildx build --platform=linux/arm64,linux/amd64 --tag=ghcr.io/cdinger/oracle-ruby:$VERSION --provenance false --push . -f-
+done

@@ -1,0 +1,12 @@
+FROM ruby:<%= requested_version %>
+
+ARG TARGETPLATFORM
+
+# Install Oracle instanct client for target architecture
+COPY ${PWD}/support/install_instantclient.sh /tmp/install_instantclient.sh
+RUN bash /tmp/install_instantclient.sh
+ENV LD_LIBRARY_PATH=/opt/instantclient
+
+# Install database client libraries and build dependencies
+RUN apt update && \
+    apt-get install -y libaio1
